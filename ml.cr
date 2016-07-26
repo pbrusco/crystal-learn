@@ -38,4 +38,8 @@ module ML
     categories_frequencies =  x.frequencies
     categories_frequencies.map {|categoriy, freq| freq * ML.entropy(tags[x.indices_of(categoriy)])}.sum
   end
+
+  def ML.gain(tags, given x)
+    ML.entropy(tags) - ML.entropy(tags, given: x)
+  end
 end
