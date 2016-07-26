@@ -12,8 +12,8 @@ class Array(T)
     self[0..n-1]
   end
 
-  def take(percentaje : Float)
-    n = (self.size * percentaje).floor.to_i
+  def take(percentage : Float)
+    n = (self.size * percentage).floor.to_i
     take(n)
   end
 
@@ -21,8 +21,8 @@ class Array(T)
     self[n..-1]
   end
 
-  def drop(percentaje : Float)
-    n = (self.size * percentaje).floor.to_i
+  def drop(percentage : Float)
+    n = (self.size * percentage).floor.to_i
     drop(n)
   end
 
