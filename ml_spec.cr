@@ -2,6 +2,7 @@ require "spec"
 require "./ml"
 require "./trees"
 
+# examples comming from: http://www.saedsayad.com/decision_tree.htm
 describe ML do
   describe "entropy" do
     it "should calculate tags entropy" do

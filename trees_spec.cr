@@ -5,6 +5,7 @@ require "./trees"
 describe ML::Classifiers::CategoricalDecisionTree do
   describe "can create simple tree" do
     it "using gain" do
+      # http://www.saedsayad.com/decision_tree.htm
       f1 = %i(r r o s s s o r r s r o o s)  # outlook
       f2 = %i(h h h m c c c m c m m m h m)  # temperature
       f3 = %i(h h h h n n n h n n n h n h)  # humidity
