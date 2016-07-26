@@ -1,6 +1,6 @@
 class KNeighborsClassifier(F, T)
   def initialize(@n_neighbors=5)
-    @neighbors = [] of Array(F)
+    @neighbors = [] of F
     @tags = [] of T
   end
 
