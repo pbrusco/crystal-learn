@@ -12,8 +12,6 @@ x_test, y_test = x[test_index], y[test_index]
 
 puts "Set sizes: x_train #{x_train.size} y_train #{y_train.size} x_test #{x_test.size} y_test #{y_test.size}"
 
-
-
 (5..150).step(10).each do |n|
   knn = ML::Classifiers::KNeighborsClassifier(typeof(x.first), typeof(y.first))
   clf = knn.new(n_neighbors: n)
