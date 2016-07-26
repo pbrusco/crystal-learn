@@ -1,7 +1,17 @@
 module ML
-  def ML.train_test_split(size, percentage=0.8)
+  def ML.train_test_split(size, *, test_size=nil, train_size=nil)
+    if test_size && train_size
+      raise "Incompatible train/test sizes" if test_size + train_size != 1
+    elsif test_size
+      train_size = 1 - test_size
+    end
+
+    if train_size.nil?
+      raise "train_size or test_size are required"
+    end
+
     idx = (0..size-1).to_a.shuffle
-    {idx.take(percentage), idx.drop(percentage)}
+    {idx.take(train_size), idx.drop(train_size)}
   end
 
   def ML.accuracy(actual, predicted)
