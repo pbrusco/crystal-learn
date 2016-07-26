@@ -1,22 +1,22 @@
-class KNeighborsClassifier(T1, T2)
+class KNeighborsClassifier(F, T)
   def initialize(@n_neighbors=5)
-    @xs = [] of Array(T1)
-    @ys = [] of T2
+    @neighbors = [] of Array(F)
+    @tags = [] of T
   end
 
   def dist(x, y)
     Math.sqrt(x.zip(y).map {|(x, y)| (x - y).abs2}.sum)
   end
 
-  def fit(xs, ys)
-    @xs = xs
-    @ys = ys
+  def fit(xs, tags)
+    @neighbors = xs
+    @tags = tags
   end
 
-  def predict(xs_new)
-    xs_new.map { |x_new|
-      distances = @xs.map {|x| dist(x, x_new)}
-      top_n = distances.zip(@ys).sort.take(@n_neighbors).map {|x| x[1]}
+  def predict(instances)
+    instances.map { |x|
+      distances = @neighbors.map {|neighbor| dist(neighbor, x)}
+      top_n = distances.zip(@tags).sort.take(@n_neighbors).map {|x| x[1]}
       top_n.mode
     }
   end

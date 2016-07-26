@@ -5,6 +5,9 @@ require "./ml"
 
 f = File.open("iris.csv")
 
+alias InstancesType = Float32
+alias LabelsType = String
+
 X = [] of Array(Float32)
 y = [] of String
 
@@ -22,7 +25,7 @@ x_test, y_test = X[test_index], y[test_index]
 puts "Set sizes: x_train #{x_train.size} y_train #{y_train.size} x_test #{x_test.size} y_test #{y_test.size}"
 
 (5..150).step(10).each do |n|
-  clf = KNeighborsClassifier(Float32, String).new(n_neighbors=n)
+  clf = KNeighborsClassifier(InstancesType, LabelsType).new(n_neighbors=n)
   clf.fit(x_train, y_train)
   y_pred = clf.predict(x_test)
   acc = ML.accuracy(y_test, y_pred)
