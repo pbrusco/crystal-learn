@@ -34,4 +34,18 @@ class Array(T)
     max_id = self.map {|x| self.count(x)}.argmax
     self[max_id]
   end
+
+  def frequencies
+    diff_values = self.uniq
+    count = self.size
+    frequencies = diff_values.map {|v| {v, self.count(v).to_f / count}}
+  end
+
+  def indices_of(elem)
+    indices = [] of Int32
+    self.each_with_index {|x, i|
+      indices << i if x == elem
+    }
+    indices
+  end
 end
