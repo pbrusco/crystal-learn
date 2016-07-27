@@ -48,4 +48,16 @@ class Array(T)
     }
     indices
   end
+
+  def select_with_indices(&block)
+    selected = [] of T
+    indices = [] of Int32
+    self.each_with_index {|x, i|
+      if yield(x)
+        selected << x
+        indices << i
+      end
+    }
+    {selected, indices}
+  end
 end

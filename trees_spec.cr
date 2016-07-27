@@ -2,7 +2,7 @@ require "spec"
 require "./ml"
 require "./trees"
 
-describe ML::Classifiers::CategoricalDecisionTree do
+describe ML::Classifiers::DecisionTreeClassifier do
   describe "can create simple tree" do
     it "using gain" do
       # http://www.saedsayad.com/decision_tree.htm
@@ -13,7 +13,11 @@ describe ML::Classifiers::CategoricalDecisionTree do
       y =  %i(n n y y y n y n y y y y y n)  # play golf?
       x = [f1, f2, f3, f4].transpose
 
-      ML::Classifiers::CategoricalDecisionTree.new.fit(x, y).class.should eq(ML::Classifiers::CategoricalDecisionTree)
+      column_names = %i(outlook temperature hummidity windy play_golf)
+
+      trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y, column_names: column_names)
+      trained_tree.class.should eq(ML::Classifiers::DecisionTreeClassifier)
+      trained_tree.show_tree
     end
   end
 
