@@ -32,6 +32,7 @@ describe ML do
 
       y.std.should be_close(9.32, delta: 0.01)
       ML.std(y, given: f1).should be_close(7.66, delta: 0.01)
+      ML.std_reduction(y, given: f1).should be_close(1.66, delta: 0.01)
     end
 
 

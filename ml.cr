@@ -62,5 +62,8 @@ module ML
     categories_frequencies.map {|category, freq| freq * y[x.indices_of(category)].std}.sum
   end
 
+  def ML.std_reduction(y, given x)
+    y.std - ML.std(y, given: x)
+  end
 
 end

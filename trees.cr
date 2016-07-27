@@ -3,7 +3,7 @@ module ML
 
     abstract class DecisionTree
       @tree : Tree
-      @column_names : Array(String) | Nil
+      @column_names : Array(String)?
 
       def initialize(@tree = EmptyTree.new)
       end
@@ -24,8 +24,8 @@ module ML
         metric_by_feature = (0 .. data.size-1).map {|feature_idx| {feature_idx, metric_function(tags, given: data[feature_idx])} }
         selected_feature, max_metric_value = metric_by_feature.max_by { |feature, metric_value| metric_value }
 
-        if max_metric_value == 0
-          Leaf.new(tag: tags[0])
+        if threshold_achieved(max_metric_value)
+          Leaf.new(tags: tags)
         else
           feature_values = data[selected_feature].uniq
           node = Node.new(feature: selected_feature, values: feature_values)
@@ -44,7 +44,7 @@ module ML
       def navigate_tree(tree, new_instance)
         case tree
         when Leaf
-          tree.tag
+          select_final_value(tree.tags)
         when Node
           split = tree.feature
           new_instance_feature_value = new_instance[split]
@@ -60,12 +60,40 @@ module ML
       def metric_function(tags, *, given x)
         ML.gain(tags, given: x)
       end
+
+      def threshold_achieved(gain)
+         gain == 0
+      end
+
+      def select_final_value(values)
+        values.first
+      end
     end
 
     class DecisionTreeRegresor < DecisionTree
-      def metric_function(tags, *, given x)
-        ML.std(tags, given: x)
+      @full_dataset_std : Float32?
+
+      def fit(x, y)
+        @full_dataset_std = y.std
+        super
       end
+
+      def metric_function(tags, *, given x)
+        ML.std_reduction(tags, given: x)
+      end
+
+      def threshold_achieved(std_reduction)
+         std_reduction < 0.05 * @full_dataset_std.not_nil!
+      end
+
+      def select_final_value(values)
+        if values.is_a? Array(Float32)
+          values.mean
+        else
+          raise "invalid type for regresion"
+        end
+      end
+
     end
 
 
@@ -105,15 +133,15 @@ class Node < Tree
 end
 
 class Leaf < Tree
-  property :tag
+  property :tags
 
-  def initialize(@tag : String | Float32)
+  def initialize(@tags : Array(String) | Array(Float32))
   end
 
   def show(column_names, level)
     tabs = "\t" * level
     class_name = column_names ? column_names.last : "class: "
-    puts tabs + "Hoja(#{class_name}: #{@tag})"
+    puts tabs + "Hoja(#{class_name}: #{@tags})"
   end
 end
 
