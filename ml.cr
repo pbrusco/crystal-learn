@@ -59,7 +59,7 @@ module ML
 
   def ML.std(y, given x)
     categories_frequencies =  x.frequencies
-    categories_frequencies.map {|category, freq| freq * y[x.indices_of(category)].std}.sum 
+    categories_frequencies.map {|category, freq| freq * y[x.indices_of(category)].std}.sum
   end
 
 
