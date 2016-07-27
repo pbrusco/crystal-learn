@@ -31,9 +31,8 @@ module ML
       end
 
       def predict(instances)
-        raise "Fit before predicting" if @tree.nil?
-        instances.map do |i|
-          navigate_tree(i)
+        instances.map do |new_instance|
+          navigate_tree(@tree, new_instance)
         end
       end
 
@@ -41,13 +40,17 @@ module ML
         @tree.show(@column_names, level: 0)
       end
 
-      def navigate_tree(i)
-        case @tree
+      def navigate_tree(tree, new_instance)
+        case tree
         when Leaf
-          @tree.tag
+          tree.tag
         when Node
-          split = @tree.feature
-          navigate(@tree.children(i[split]))
+          split = tree.feature
+          new_instance_feature_value = new_instance[split]
+          child = tree.children_with_value(new_instance_feature_value)
+          navigate_tree(child, new_instance)
+        else
+          raise "fit before predicting"
         end
       end
     end
@@ -67,6 +70,10 @@ class Node < Tree
 
   def initialize(@feature : Int32, @values : Array(Symbol))
     @children = Array(Tree).new(@values.size)
+  end
+
+  def children_with_value(value)
+    @children[@values.index(value).not_nil!]
   end
 
   def show(column_names, level)

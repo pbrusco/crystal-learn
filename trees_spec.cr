@@ -17,7 +17,10 @@ describe ML::Classifiers::DecisionTreeClassifier do
 
       trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y, column_names: column_names)
       trained_tree.class.should eq(ML::Classifiers::DecisionTreeClassifier)
-      trained_tree.show_tree
+      # trained_tree.show_tree
+
+      trained_tree.predict([%i(s h h t)]).should eq([:n])
+      trained_tree.predict([%i(s h h t)]).should eq([:n])
     end
   end
 
