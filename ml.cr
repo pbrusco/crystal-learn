@@ -50,7 +50,7 @@ module ML
 
   def ML.entropy(y, given x)
     categories_frequencies =  x.frequencies
-    categories_frequencies.map {|categoriy, freq| freq * ML.entropy(y[x.indices_of(categoriy)])}.sum
+    categories_frequencies.map {|category, freq| freq * ML.entropy(y[x.indices_of(category)])}.sum
   end
 
   def ML.gain(y, given x)
@@ -58,6 +58,9 @@ module ML
   end
 
   def ML.std(y, given x)
-    y.std
+    categories_frequencies =  x.frequencies
+    categories_frequencies.map {|category, freq| freq * y[x.indices_of(category)].std}.sum 
   end
+
+
 end
