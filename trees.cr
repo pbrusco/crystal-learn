@@ -1,23 +1,30 @@
 module ML
   module Classifiers
-    class DecisionTreeClassifier
+
+    abstract class DecisionTree
       @tree : Tree
-      @column_names : Array(Symbol) | Nil
+      @column_names : Array(String) | Nil
 
       def initialize(@tree = EmptyTree.new)
       end
 
-      def fit(xs, tags, *, @column_names)
+      def fit(xs, tags, *, @column_names = nil)
         @tree = build_tree(xs, tags)
         self
       end
 
+      def predict(instances)
+        instances.map do |new_instance|
+          navigate_tree(@tree, new_instance)
+        end
+      end
+
       def build_tree(xs, tags)
         data = xs.transpose
-        gains_by_feature = (0 .. data.size-1).map {|feature_idx| {feature_idx, ML.gain(tags, given: data[feature_idx])} }
-        selected_feature, max_gain = gains_by_feature.max_by { |feature, gain| gain }
+        metric_by_feature = (0 .. data.size-1).map {|feature_idx| {feature_idx, metric_function(tags, given: data[feature_idx])} }
+        selected_feature, max_metric_value = metric_by_feature.max_by { |feature, metric_value| metric_value }
 
-        if max_gain == 0
+        if max_metric_value == 0
           Leaf.new(tag: tags[0])
         else
           feature_values = data[selected_feature].uniq
@@ -27,12 +34,6 @@ module ML
             build_tree(selected_rows, tags[indices]) as Tree
           }
           node
-        end
-      end
-
-      def predict(instances)
-        instances.map do |new_instance|
-          navigate_tree(@tree, new_instance)
         end
       end
 
@@ -54,6 +55,20 @@ module ML
         end
       end
     end
+
+    class DecisionTreeClassifier < DecisionTree
+      def metric_function(tags, *, given x)
+        ML.gain(tags, given: x)
+      end
+    end
+
+    class DecisionTreeRegresor < DecisionTree
+      def metric_function(tags, *, given x)
+        ML.std(tags, given: x)
+      end
+    end
+
+
   end
 end
 
@@ -68,7 +83,7 @@ class Node < Tree
 
   @children : Array(Tree)
 
-  def initialize(@feature : Int32, @values : Array(Symbol))
+  def initialize(@feature : Int32, @values : Array(String))
     @children = Array(Tree).new(@values.size)
   end
 
@@ -92,7 +107,7 @@ end
 class Leaf < Tree
   property :tag
 
-  def initialize(@tag : Symbol)
+  def initialize(@tag : String | Float32)
   end
 
   def show(column_names, level)

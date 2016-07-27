@@ -29,17 +29,35 @@ module ML
     {xs, ys}
   end
 
-  def ML.entropy(tags)
-    tags_frequencies = tags.frequencies
-    tags_frequencies.map {|tag, freq| -freq * Math.log(freq, 2)}.sum
+  def ML.load_string_csv(csv_file)
+    xs = [] of Array(String)
+    ys = [] of Float32
+
+    f = File.open(csv_file)
+    CSV.parse(f, separator: ',').each_with_index do |row, idx|
+      next if idx == 0
+      xs << row[0, row.size - 1]
+      ys << row[row.size - 1].to_f32
+    end
+    {xs, ys}
   end
 
-  def ML.entropy(tags, given x)
+
+  def ML.entropy(y)
+    y_frequencies = y.frequencies
+    y_frequencies.map {|tag, freq| -freq * Math.log(freq, 2)}.sum
+  end
+
+  def ML.entropy(y, given x)
     categories_frequencies =  x.frequencies
-    categories_frequencies.map {|categoriy, freq| freq * ML.entropy(tags[x.indices_of(categoriy)])}.sum
+    categories_frequencies.map {|categoriy, freq| freq * ML.entropy(y[x.indices_of(categoriy)])}.sum
   end
 
-  def ML.gain(tags, given x)
-    ML.entropy(tags) - ML.entropy(tags, given: x)
+  def ML.gain(y, given x)
+    ML.entropy(y) - ML.entropy(y, given: x)
+  end
+
+  def ML.std(y, given x)
+    y.std
   end
 end

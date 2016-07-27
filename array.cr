@@ -60,4 +60,14 @@ class Array(T)
     }
     {selected, indices}
   end
+
+  def mean
+    self.sum / self.size.to_f
+  end
+
+  def std
+    mu  = self.mean
+    Math.sqrt(self.map {|x| (x - mu).abs2}.sum / self.size.to_f)
+  end
+
 end
