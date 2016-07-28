@@ -3,13 +3,12 @@ module ML
 
     abstract class DecisionTree
       @tree : Tree
-      @column_names : Array(String)?
 
       def initialize(@tree = EmptyTree.new)
       end
 
-      def fit(xs, tags, *, @column_names = nil)
-        @tree = build_tree(xs, tags)
+      def fit(x, y)
+        @tree = build_tree(x, y)
         self
       end
 
@@ -37,8 +36,8 @@ module ML
         end
       end
 
-      def show_tree
-        @tree.show(@column_names, level: 0)
+      def show_tree(column_names)
+        @tree.show(column_names, level: 0)
       end
 
       def navigate_tree(tree, new_instance)
@@ -66,12 +65,16 @@ module ML
       end
 
       def select_final_value(values)
+        raise "values must be all equal" if values.uniq.size != 1
         values.first
       end
     end
 
     class DecisionTreeRegresor < DecisionTree
-      @full_dataset_std : Float32?
+      def initialize
+        @full_dataset_std=0.0f32
+        super
+      end
 
       def fit(x, y)
         @full_dataset_std = y.std
@@ -83,7 +86,8 @@ module ML
       end
 
       def threshold_achieved(std_reduction)
-         std_reduction < 0.05 * @full_dataset_std.not_nil!
+         puts std_reduction, @full_dataset_std
+         std_reduction <= (0.05 * @full_dataset_std)
       end
 
       def select_final_value(values)
@@ -116,7 +120,13 @@ class Node < Tree
   end
 
   def children_with_value(value)
-    @children[@values.index(value).not_nil!]
+    index = @values.index(value)
+    if index
+      @children[index]
+    else
+      raise "Value: #{value} not found in the possible values of the feature: F#{@feature} #{@values}"
+    end
+
   end
 
   def show(column_names, level)

@@ -4,35 +4,68 @@ require "./ml"
 require "./trees"
 require "./array"
 
+def golf_features
+  f0 = %w(r r o s s s o r r s r o o s)  # outlook
+  f1 = %w(h h h m c c c m c m m m h m)  # temperature
+  f2 = %w(h h h h n n n h n n n h n h)  # humidity
+  f3 = %w(f t f f f t t f f f t t f t)  # windy
+  [f0, f1, f2, f3].transpose
+end
+
+
 describe ML::Classifiers::DecisionTreeClassifier do
-  describe "can create and predict in simple tree" do
-    it "using gain" do
+  describe "with categorical data" do
+    it "should classify" do
       # http://www.saedsayad.com/decision_tree.htm
-      f1 = %w(r r o s s s o r r s r o o s)  # outlook
-      f2 = %w(h h h m c c c m c m m m h m)  # temperature
-      f3 = %w(h h h h n n n h n n n h n h)  # humidity
-      f4 = %w(f t f f f t t f f f t t f t)  # windy
+      x = golf_features
       y =  %w(n n y y y n y n y y y y y n)  # play golf?
-      x = [f1, f2, f3, f4].transpose
 
       column_names = %w(outlook temperature hummidity windy play_golf)
 
-      trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y, column_names: column_names)
+      trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
       trained_tree.class.should eq(ML::Classifiers::DecisionTreeClassifier)
-      # trained_tree.show_tree
+      # trained_tree.show_tree(column_names: column_names)
 
       trained_tree.predict([%w(s h h t)]).should eq(["n"])
       trained_tree.predict([%w(s h h t)]).should eq(["n"])
     end
 
-    it "can be use for regressions on categorical data (hair eye color)" do
-      x, y = ML.load_string_csv("HairEyeColor.csv")
+    # it "should classify unseen paths" do
+    #   # http://www.saedsayad.com/decision_tree.htm
+    #   x = golf_features
+    #   y =  %w(n n y y y n y n y y y y y n)  # play golf?
+    #
+    #   column_names = %w(outlook temperature hummidity windy play_golf)
+    #
+    #   trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
+    #   trained_tree.class.should eq(ML::Classifiers::DecisionTreeClassifier)
+    #   # trained_tree.show_tree(column_names: column_names)
+    #
+    #   trained_tree.predict([%w(s s s s)]).should eq(["n"])
+    # end
+    #
+    # it "should predict regression" do
+    #   # http://www.saedsayad.com/decision_tree_reg.htm
+    #   x = golf_features
+    #   y =  [25, 30, 46, 45, 52, 23, 43, 35, 38, 46, 48, 52, 44, 30].map(&.to_f32)  # hours played
+    #
+    #   column_names = %w(outlook temperature hummidity windy hours_played)
+    #
+    #   trained_tree = ML::Classifiers::DecisionTreeRegresor.new.fit(x, y)
+    #
+    #   trained_tree.class.should eq(ML::Classifiers::DecisionTreeRegresor)
+    #   trained_tree.show_tree(column_names: column_names)
+    #   trained_tree.predict([%w(s m n f)]).should eq(47.7)
+    # end
 
-      clf = ML::Classifiers::DecisionTreeRegresor.new
-      clf.fit(x, y)
-      y_pred = clf.predict(x)
-      puts y_pred
-    end
+    # it "can be use for regressions on categorical data (hair eye color)" do
+      # x, y = ML.load_string_csv("HairEyeColor.csv")
+#
+      # clf = ML::Classifiers::DecisionTreeRegresor.new
+      # clf.fit(x, y)
+      # y_pred = clf.predict(x)
+      # puts y_pred
+    # end
     #
     # it "can be use for regressions for continuous data (iris dataset)" do
     #   x, y = ML.load_csv("iris.csv")
