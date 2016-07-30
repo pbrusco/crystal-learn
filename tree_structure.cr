@@ -1,26 +1,25 @@
 # http://www.saedsayad.com/decision_tree.htm
 
-abstract struct Tree
+abstract class Tree
 end
 
-struct Node(T1) < Tree
-  property :children
+class Node < Tree
+  property :left_child
+  property :right_child
   property :feature_index
+  property :split_value
 
-  @children : Array(Tree)
+  @left_child : Tree
+  @right_child : Tree
+  @split_value : String
 
-  def initialize(@feature_index : Int32, @values : Array(T1))
-    @children = Array(Tree).new(@values.size)
+  def initialize(@feature_index : Int32, @split_value : String)
+    @right_child = EmptyTree.new
+    @left_child = EmptyTree.new
   end
 
-  def children_with_value(value)
-    index = @values.index(value)
-    if index
-      @children[index]
-    else
-      raise "Value: #{value} not found in the possible values of the feature: F#{@feature_index} #{@values}"
-    end
-
+  def children
+    [@left_child, @right_child]
   end
 
   def show(column_names, level)
@@ -28,18 +27,17 @@ struct Node(T1) < Tree
     feature_name = column_names ? column_names[@feature_index] : "F#{@feature_index}"
 
     puts tabs + "Node(feature=#{feature_name})"
-    @children.zip(@values).each do |c, v|
+    children.zip(@values).each do |c, v|
       puts tabs + "value: #{v}"
       c.show(column_names, level+1)
     end
   end
-
 end
 
-struct Leaf(T2) < Tree
+class Leaf < Tree
   property :tags
 
-  def initialize(@tags : Array(T2))
+  def initialize(@tags : Array(String) | Array(Float32))  # TODO: Change for generic type when crystal is ready :)
   end
 
   def show(column_names, level)
@@ -49,7 +47,7 @@ struct Leaf(T2) < Tree
   end
 end
 
-struct EmptyTree < Tree
+class EmptyTree < Tree
   def show(column_names, level)
   end
 end

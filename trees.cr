@@ -27,13 +27,22 @@ module ML
           Leaf.new(tags: tags)
         else
           feature_values = data[selected_feature].uniq
-          node = Node(typeof(feature_values[0])).new(feature_index: selected_feature, values: feature_values)
-          node.children = feature_values.map { |feature_value|
-            selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == feature_value}
-            build_tree(selected_rows, tags[indices]) as Tree
-          }
+          split_feature_value = better_split(feature_values, xs)
+
+          node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
+
+          selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == split_feature_value}
+          node.left_child = build_tree(selected_rows, tags[indices])
+
+          other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] != split_feature_value}
+          node.right_child = build_tree(other_rows, tags[other_indices])
+
           node
         end
+      end
+
+      def better_split(features, xs)
+        features[0]
       end
 
       def show_tree(column_names)
@@ -47,7 +56,7 @@ module ML
         when Node
           split = tree.feature_index
           new_instance_feature_value = new_instance[split]
-          child = tree.children_with_value(new_instance_feature_value)
+          child = tree.split_value == new_instance_feature_value ? tree.left_child : tree.right_child
           navigate_tree(child, new_instance)
         else
           raise "fit before predicting"
@@ -65,8 +74,7 @@ module ML
       end
 
       def select_final_value(values)
-        raise "values must be all equal" if values.uniq.size != 1
-        values.first
+        values.mode
       end
     end
 
