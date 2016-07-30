@@ -86,7 +86,6 @@ module ML
       end
 
       def threshold_achieved(std_reduction)
-         puts std_reduction, @full_dataset_std
          std_reduction <= (0.05 * @full_dataset_std)
       end
 
