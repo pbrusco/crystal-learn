@@ -26,20 +26,36 @@ module ML
         if threshold_achieved(max_metric_value)
           Leaf.new(tags: tags)
         else
-          feature_values = data[selected_feature].uniq
-          split_feature_value = better_split(feature_values, xs)
-
-          node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
-
-          selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == split_feature_value}
-          node.left_child = build_tree(selected_rows, tags[indices])
-
-          other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] != split_feature_value}
-          node.right_child = build_tree(other_rows, tags[other_indices])
-
-          node
+          node = build_node(xs, data, selected_feature, tags)
         end
       end
+
+      def build_node(xs : Array(Array(String)), data, selected_feature, tags)
+        feature_values = data[selected_feature].uniq
+        split_feature_value = better_split(feature_values, xs)
+
+        node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
+
+        selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == split_feature_value}
+        node.left_child = build_tree(selected_rows, tags[indices])
+
+        other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] != split_feature_value}
+        node.right_child = build_tree(other_rows, tags[other_indices])
+        node
+      end
+
+      def build_node(xs : Array(Array(Float32)), data, selected_feature, tags)
+        split_feature_value = data[selected_feature].mean
+        node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
+
+        selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] <= split_feature_value}
+        node.left_child = build_tree(selected_rows, tags[indices])
+
+        other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] > split_feature_value}
+        node.right_child = build_tree(other_rows, tags[other_indices])
+        node
+      end
+
 
       def better_split(features, xs)
         features[0]
@@ -49,6 +65,18 @@ module ML
         @tree.show(column_names, level: 0)
       end
 
+      def decide_child(split_val : Float32, new_instance_feature_value : Float32, tree)
+        child = split_val <= new_instance_feature_value ? tree.left_child : tree.right_child
+      end
+
+      def decide_child(split_val : String, new_instance_feature_value : String, tree)
+        child = split_val == new_instance_feature_value ? tree.left_child : tree.right_child
+      end
+
+      def decide_child(a, b, c)
+        raise "Type error"
+      end
+
       def navigate_tree(tree, new_instance)
         case tree
         when Leaf
@@ -56,7 +84,12 @@ module ML
         when Node
           split = tree.feature_index
           new_instance_feature_value = new_instance[split]
-          child = tree.split_value == new_instance_feature_value ? tree.left_child : tree.right_child
+          split_val = tree.split_value
+          if split_val.is_a?(String)
+            child = decide_child(split_val, new_instance_feature_value, tree)
+          elsif split_val.is_a?(Float32)
+            child = decide_child(split_val, new_instance_feature_value, tree)
+          end
           navigate_tree(child, new_instance)
         else
           raise "fit before predicting"

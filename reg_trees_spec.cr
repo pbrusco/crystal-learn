@@ -1,5 +1,0 @@
-require "spec"
-require "csv"
-require "./ml"
-require "./trees"
-require "./array"

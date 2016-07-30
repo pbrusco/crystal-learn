@@ -43,6 +43,18 @@ describe ML::Classifiers::DecisionTreeClassifier do
       trained_tree.predict([%w(s s s s)]).should eq(["n"])
     end
   end
+
+  describe "with numerical data (iris dataset)" do
+    it "should classify" do
+      x, y = ML.load_floats_csv("iris.csv")
+      clf = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
+      y_pred = clf.predict(x)
+
+      acc = ML.accuracy(y, y_pred)
+      acc.is_a?(Float).should eq(true)
+    end
+  end
+
 end
 
 

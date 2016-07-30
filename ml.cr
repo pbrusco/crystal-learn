@@ -16,26 +16,26 @@ module ML
     right.to_f / actual.size
   end
 
-  def ML.load_csv(csv_file)
+  def ML.load_floats_csv(csv_file, *, skip_header = true, columns_to_skip = 0)
     xs = [] of Array(Float32)
     ys = [] of String
 
     f = File.open(csv_file)
     CSV.parse(f, separator: ',').each_with_index do |row, idx|
-      next if idx == 0
-      xs << row[0, row.size - 1].map {|x| x.to_f32}
+      next if idx == 0 && skip_header
+      xs << row[columns_to_skip, row.size - columns_to_skip - 1].map(&.to_f32)
       ys << row[row.size - 1]
     end
     {xs, ys}
   end
 
-  def ML.load_string_csv(csv_file, columns_to_skip)
+  def ML.load_string_csv(csv_file, *, skip_header = true, columns_to_skip = 0)
     xs = [] of Array(String)
     ys = [] of Float32
 
     f = File.open(csv_file)
     CSV.parse(f, separator: ',').each_with_index do |row, idx|
-      next if idx == 0
+      next if idx == 0 && skip_header
       xs << row[columns_to_skip, row.size - columns_to_skip - 1]
       ys << row[row.size - 1].to_f32
     end

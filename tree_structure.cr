@@ -11,9 +11,9 @@ class Node < Tree
 
   @left_child : Tree
   @right_child : Tree
-  @split_value : String
+  @split_value : String | Float32 #TODO: Change for generic types when crystal is ready :)
 
-  def initialize(@feature_index : Int32, @split_value : String)
+  def initialize(@feature_index : Int32, @split_value)
     @right_child = EmptyTree.new
     @left_child = EmptyTree.new
   end
