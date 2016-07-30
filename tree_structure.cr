@@ -27,8 +27,8 @@ class Node < Tree
     feature_name = column_names ? column_names[@feature_index] : "F#{@feature_index}"
 
     puts tabs + "Node(feature=#{feature_name})"
-    children.zip(@values).each do |c, v|
-      puts tabs + "value: #{v}"
+    children.each do |c|
+      puts tabs + "split_by: #{@split_value}"
       c.show(column_names, level+1)
     end
   end
@@ -43,7 +43,7 @@ class Leaf < Tree
   def show(column_names, level)
     tabs = "\t" * level
     class_name = column_names ? column_names.last : "class: "
-    puts tabs + "Hoja(#{class_name}: #{@tags})"
+    puts tabs + "Hoja(#{class_name}: #{@tags.mode})"
   end
 end
 

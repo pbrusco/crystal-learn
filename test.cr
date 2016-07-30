@@ -1,9 +1,10 @@
 require "csv"
 require "./knn"
+require "./trees"
 require "./array"
 require "./ml"
 
-x, y = ML.load_csv("iris.csv")
+x, y = ML.load_floats_csv("iris.csv")
 
 train_index, test_index = ML.train_test_split(x.size, train_size: 0.8)
 
@@ -20,3 +21,11 @@ puts "Set sizes: x_train #{x_train.size} y_train #{y_train.size} x_test #{x_test
 
   p "Accuracy (KNN - #{n} neighbors): #{acc}"
 end
+
+clf = ML::Classifiers::DecisionTreeClassifier.new
+clf.fit(x_train, y_train)
+y_pred = clf.predict(x_test)
+acc = ML.accuracy(y_test, y_pred)
+
+p "Accuracy (DecisionTreeClassifier): #{acc}"
+# clf.show_tree(%w(sepal_length sepal_width petal_length petal_width species))

@@ -56,9 +56,8 @@ module ML
         node
       end
 
-
       def better_split(features, xs)
-        features[0]
+        features[0] # TODO: select better partition
       end
 
       def show_tree(column_names)
