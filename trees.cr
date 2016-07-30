@@ -44,7 +44,7 @@ module ML
         node
       end
 
-      def build_node(xs : Array(Array(Float32)), data, selected_feature, tags)
+      def build_node(xs : Array(Array(Float)), data, selected_feature, tags)
         split_feature_value = data[selected_feature].mean
         node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
 
@@ -64,7 +64,7 @@ module ML
         @tree.show(column_names, level: 0)
       end
 
-      def decide_child(split_val : Float32, new_instance_feature_value : Float32, tree)
+      def decide_child(split_val : Float, new_instance_feature_value : Float, tree)
         child = split_val <= new_instance_feature_value ? tree.left_child : tree.right_child
       end
 
@@ -86,7 +86,7 @@ module ML
           split_val = tree.split_value
           if split_val.is_a?(String)
             child = decide_child(split_val, new_instance_feature_value, tree)
-          elsif split_val.is_a?(Float32)
+          elsif split_val.is_a?(Float)
             child = decide_child(split_val, new_instance_feature_value, tree)
           end
           navigate_tree(child, new_instance)
@@ -130,7 +130,7 @@ module ML
       end
 
       def select_final_value(values)
-        if values.is_a? Array(Float32)
+        if values.is_a? Array(Float32) | Array(Float64)
           values.mean
         else
           raise "invalid type for regresion"

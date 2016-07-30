@@ -66,4 +66,10 @@ module ML
     y.std - ML.std(y, given: x)
   end
 
+  def ML.standardize(x)
+    mean = x.mean(by: :column)
+    std = x.std(by: :column)
+    x.substract(mean, by: :column).divide(std, by: :column)
+  end
+
 end

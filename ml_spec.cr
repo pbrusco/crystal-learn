@@ -1,10 +1,11 @@
 require "spec"
+require "csv"
 require "./ml"
 require "./trees"
 
 # examples comming from: http://www.saedsayad.com/decision_tree.htm
 describe ML do
-  describe "entropy" do
+  describe "information on splitting" do
     it "should calculate entropy and gain given categorical features" do
       f1 = %i(r r o s s s o r r s r o o s)  # outlook
       f2 = %i(h h h m c c c m c m m m h m)  # temperature
@@ -34,8 +35,14 @@ describe ML do
       ML.std(y, given: f1).should be_close(7.66, delta: 0.01)
       ML.std_reduction(y, given: f1).should be_close(1.66, delta: 0.01)
     end
+  end
 
+  describe "normalizing dataset" do
+    it "can normalize dataset" do
+      x, y = ML.load_floats_csv("iris.csv")
+      x_standardized = ML.standardize(x)
 
-
+      x_standardized.shape.should eq(x.shape)
+    end
   end
 end
