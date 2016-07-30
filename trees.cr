@@ -1,3 +1,4 @@
+require "./tree_structure"
 module ML
   module Classifiers
 
@@ -27,7 +28,7 @@ module ML
           Leaf.new(tags: tags)
         else
           feature_values = data[selected_feature].uniq
-          node = Node.new(feature: selected_feature, values: feature_values)
+          node = Node(typeof(feature_values[0])).new(feature_index: selected_feature, values: feature_values)
           node.children = feature_values.map { |feature_value|
             selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == feature_value}
             build_tree(selected_rows, tags[indices]) as Tree
@@ -45,7 +46,7 @@ module ML
         when Leaf
           select_final_value(tree.tags)
         when Node
-          split = tree.feature
+          split = tree.feature_index
           new_instance_feature_value = new_instance[split]
           child = tree.children_with_value(new_instance_feature_value)
           navigate_tree(child, new_instance)
@@ -97,65 +98,6 @@ module ML
           raise "invalid type for regresion"
         end
       end
-
     end
-
-
-  end
-end
-
-# http://www.saedsayad.com/decision_tree.htm
-
-abstract class Tree
-end
-
-class Node < Tree
-  property :children
-  property :feature
-
-  @children : Array(Tree)
-
-  def initialize(@feature : Int32, @values : Array(String))
-    @children = Array(Tree).new(@values.size)
-  end
-
-  def children_with_value(value)
-    index = @values.index(value)
-    if index
-      @children[index]
-    else
-      raise "Value: #{value} not found in the possible values of the feature: F#{@feature} #{@values}"
-    end
-
-  end
-
-  def show(column_names, level)
-    tabs = "\t" * level
-    feature_name = column_names ? column_names[@feature] : "F#{@feature}"
-
-    puts tabs + "Node(feature=#{feature_name})"
-    @children.zip(@values).each do |c, v|
-      puts tabs + "value: #{v}"
-      c.show(column_names, level+1)
-    end
-  end
-
-end
-
-class Leaf < Tree
-  property :tags
-
-  def initialize(@tags : Array(String) | Array(Float32))
-  end
-
-  def show(column_names, level)
-    tabs = "\t" * level
-    class_name = column_names ? column_names.last : "class: "
-    puts tabs + "Hoja(#{class_name}: #{@tags})"
-  end
-end
-
-class EmptyTree < Tree
-  def show(column_names, level)
   end
 end
