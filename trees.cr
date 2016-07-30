@@ -1,7 +1,6 @@
 require "./tree_structure"
 module ML
   module Classifiers
-
     abstract class DecisionTree
       @tree : Tree
 

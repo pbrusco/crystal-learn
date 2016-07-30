@@ -3,16 +3,16 @@
 abstract struct Tree
 end
 
-struct Node(T) < Tree
+struct Node(T1) < Tree
   property :children
   property :feature_index
 
   @children : Array(Tree)
 
-  def initialize(@feature_index : Int32, @values : Array(T))
+  def initialize(@feature_index : Int32, @values : Array(T1))
     @children = Array(Tree).new(@values.size)
   end
-  
+
   def children_with_value(value)
     index = @values.index(value)
     if index
@@ -36,16 +36,16 @@ struct Node(T) < Tree
 
 end
 
-struct Leaf < Tree
+struct Leaf(T2) < Tree
   property :tags
 
-  def initialize(@tags : Array(String) | Array(Float32))
+  def initialize(@tags : Array(T2))
   end
 
   def show(column_names, level)
     tabs = "\t" * level
-    struct_name = column_names ? column_names.last : "class: "
-    puts tabs + "Hoja(#{struct_name}: #{@tags})"
+    class_name = column_names ? column_names.last : "class: "
+    puts tabs + "Hoja(#{class_name}: #{@tags})"
   end
 end
 

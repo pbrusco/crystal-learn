@@ -29,14 +29,14 @@ module ML
     {xs, ys}
   end
 
-  def ML.load_string_csv(csv_file)
+  def ML.load_string_csv(csv_file, columns_to_skip)
     xs = [] of Array(String)
     ys = [] of Float32
 
     f = File.open(csv_file)
     CSV.parse(f, separator: ',').each_with_index do |row, idx|
       next if idx == 0
-      xs << row[0, row.size - 1]
+      xs << row[columns_to_skip, row.size - columns_to_skip - 1]
       ys << row[row.size - 1].to_f32
     end
     {xs, ys}
