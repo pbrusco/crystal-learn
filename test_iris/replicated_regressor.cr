@@ -27,6 +27,12 @@ x_test = ML.arange(0.0, 5.0, step: 0.01).map {|x| [x]}
 y_pred2 = regr2.predict(x_test).map {|x| x.round(2)}
 y_pred5 = regr5.predict(x_test).map {|x| x.round(2)}
 
+puts "regresor max_depth: 2"
+regr2.show_tree(column_names: ["x", "y"])
+
+# puts "regresor max_depth: 5"
+# regr5.show_tree(column_names: ["x", "y"])
+
 
 f = File.open("regressor.csv", mode: "w")
 

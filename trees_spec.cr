@@ -100,7 +100,6 @@ describe ML::Classifiers::DecisionTreeRegressor do
 
     regr.fit(x, y)
 
-    regr.show_tree(column_names: ["x", "y"])
     regr.depth.should eq(2)
   end
 
