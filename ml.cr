@@ -42,6 +42,14 @@ module ML
     {xs, ys}
   end
 
+  def ML.arange(start, endd, *, step)
+    i = start
+    while(i < endd)
+      yield i.round(2)
+      i += step
+    end
+  end
+
 
   def ML.entropy(y)
     y_frequencies = y.frequencies

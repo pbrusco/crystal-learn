@@ -12,10 +12,14 @@ module ML
         self
       end
 
-      def predict(instances)
+      def predict(instances : Array(Array(Float)) | Array(Array(String)))
         instances.map do |new_instance|
-          navigate_tree(@tree, new_instance)
+          predict(new_instance)
         end
+      end
+
+      def predict(instance : Array(Float) | Array(String))
+        navigate_tree(@tree, instance)
       end
 
       def build_tree(xs, tags)
@@ -65,7 +69,7 @@ module ML
       end
 
       def decide_child(split_val : Float, new_instance_feature_value : Float, tree)
-        child = split_val <= new_instance_feature_value ? tree.left_child : tree.right_child
+        child = split_val > new_instance_feature_value ? tree.left_child : tree.right_child
       end
 
       def decide_child(split_val : String, new_instance_feature_value : String, tree)
@@ -84,11 +88,7 @@ module ML
           split = tree.feature_index
           new_instance_feature_value = new_instance[split]
           split_val = tree.split_value
-          if split_val.is_a?(String)
-            child = decide_child(split_val, new_instance_feature_value, tree)
-          elsif split_val.is_a?(Float)
-            child = decide_child(split_val, new_instance_feature_value, tree)
-          end
+          child = decide_child(split_val, new_instance_feature_value, tree)
           navigate_tree(child, new_instance)
         else
           raise "fit before predicting"
