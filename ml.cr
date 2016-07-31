@@ -58,7 +58,6 @@ module ML
     res
   end
 
-
   def ML.entropy(y)
     y_frequencies = y.frequencies
     y_frequencies.map {|tag, freq| -freq * Math.log(freq, 2)}.sum
