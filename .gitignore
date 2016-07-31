@@ -1,0 +1,4 @@
+test_iris/*.csv
+test_iris/*.dot
+test_iris/*.ps
+test_iris/.ipynb_checkpoints/
