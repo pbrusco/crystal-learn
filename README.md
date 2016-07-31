@@ -1,4 +1,5 @@
-An sklearn like machine-learning library for crystal
+## An sklearn-like machine-learning library for Crystal
+
 ```crystal
 require "csv"
 require "./knn"
@@ -47,6 +48,8 @@ end
 puts
 
 ```
+
+### Output:
 ```
 Loading IRIS dataset
 Shapes: X: {150, 4}, y: 150
