@@ -6,26 +6,32 @@ require "./ml"
 
 x, y = ML.load_floats_csv("iris.csv")
 
-train_index, test_index = ML.train_test_split(x.size, train_size: 0.8)
+puts x.shape
+puts y.shape
 
-x_train, y_train = x[train_index], y[train_index]
-x_test, y_test = x[test_index], y[test_index]
+def folds_accuracy(clf, x, y, *, n_folds k)
+  accuracies = [] of Float64
+  folds = ML.kfold_cross_validation(y, n_folds: k)
 
-puts "Set sizes: x_train #{x_train.size} y_train #{y_train.size} x_test #{x_test.size} y_test #{y_test.size}"
+  folds.each do |train_index, test_index|
+    x_train, y_train = x[train_index], y[train_index]
+    x_test, y_test = x[test_index], y[test_index]
+
+    clf.fit(x_train, y_train)
+    y_pred = clf.predict(x_test)
+
+    accuracies << ML.accuracy(y_test, y_pred)
+  end
+  accuracies
+end
 
 (5..150).step(10).each do |n|
   clf = ML::Classifiers::KNeighborsClassifier(typeof(x.first), typeof(y.first)).new(n_neighbors: n)
-  clf.fit(x_train, y_train)
-  y_pred = clf.predict(x_test)
-  acc = ML.accuracy(y_test, y_pred)
-
-  p "Accuracy (KNN - #{n} neighbors): #{acc}"
+  folds_acc = folds_accuracy(clf, x, y, folds: 10)
+  p "Accuracy (KNN): #{folds_acc} (10 folds) (#{n} neighbors)"
 end
 
 clf = ML::Classifiers::DecisionTreeClassifier.new
-clf.fit(x_train, y_train)
-y_pred = clf.predict(x_test)
-acc = ML.accuracy(y_test, y_pred)
-
-p "Accuracy (DecisionTreeClassifier): #{acc}"
+folds_acc = folds_accuracy(clf, x, y, folds: 10)
+p "Accuracy (DecisionTreeClassifier): #{acc} (10 folds)"
 # clf.show_tree(%w(sepal_length sepal_width petal_length petal_width species))

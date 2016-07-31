@@ -11,6 +11,22 @@ module ML
     train_test_split(size, train_size: train_size)
   end
 
+  def ML.kfold_cross_validation(*, dataset_size, n_folds k = 10, shuffle = true)
+    res = [] of Tuple(Array(Int32), Array(Int32))
+    idx = (0..dataset_size-1).to_a
+    idx.shuffle! if shuffle
+
+    training_percentage = 1 - (1.0 / k)
+
+    k.times do |i|
+      training_idx = idx.take(training_percentage)
+      res << {training_idx, idx.drop(training_percentage)}
+      idx = idx.rotate(training_idx.size)
+    end
+
+    res
+  end
+
   def ML.accuracy(actual, predicted)
     right = actual.zip(predicted).map {|(x,y)| x == y ? 1 : 0}.sum
     right.to_f / actual.size

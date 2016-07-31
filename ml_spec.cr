@@ -45,4 +45,26 @@ describe ML do
       x_standardized.shape.should eq(x.shape)
     end
   end
+
+  describe "kfold_cross_validation" do
+    it "can iterate over folds" do
+      x = [[1, 2], [3, 4], [1, 2], [3, 4]]
+      y = [0, 0, 1, 1]
+      skf = ML.kfold_cross_validation(dataset_size: y.size, n_folds: 2, shuffle: false)
+      skf.size.should eq(2)
+
+      train_index, test_index = skf.first
+      x_train, x_test = x[train_index], x[test_index]
+      y_train, y_test = y[train_index], y[test_index]
+      train_index.should eq([0, 1])
+      test_index.should eq([2, 3])
+
+      train_index, test_index = skf.last
+      x_train, x_test = x[train_index], x[test_index]
+      y_train, y_test = y[train_index], y[test_index]
+
+      train_index.should eq([2, 3])
+      test_index.should eq([0, 1])
+    end
+  end
 end
