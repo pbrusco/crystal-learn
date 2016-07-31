@@ -11,11 +11,15 @@ class Node < Tree
 
   @left_child : Tree
   @right_child : Tree
-  @split_value : String | Float32 #TODO: Change for generic types when crystal is ready :)
+  @split_value : String | Float32 | Float64 #TODO: Change for generic types when crystal is ready :)
 
   def initialize(@feature_index : Int32, @split_value)
     @right_child = EmptyTree.new
     @left_child = EmptyTree.new
+  end
+
+  def depth
+    Math.max(@left_child.depth, @right_child.depth) + 1
   end
 
   def children
@@ -37,7 +41,11 @@ end
 class Leaf < Tree
   property :tags
 
-  def initialize(@tags : Array(String) | Array(Float32))  # TODO: Change for generic type when crystal is ready :)
+  def initialize(@tags : Array(String) | Array(Float32) | Array(Float64))  # TODO: Change for generic type when crystal is ready :)
+  end
+
+  def depth
+    0
   end
 
   def show(column_names, level)
@@ -49,5 +57,9 @@ end
 
 class EmptyTree < Tree
   def show(column_names, level)
+  end
+
+  def depth
+    0
   end
 end

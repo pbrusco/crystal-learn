@@ -42,12 +42,20 @@ module ML
     {xs, ys}
   end
 
-  def ML.arange(start, endd, *, step)
+  def ML.arange(start, endd, *, step, &block)
     i = start
     while(i < endd)
       yield i.round(2)
       i += step
     end
+  end
+
+  def ML.arange(start, endd, *, step)
+    res = [] of Float64
+    ML.arange(start, endd, step: step) do |x|
+      res << x
+    end
+    res
   end
 
 

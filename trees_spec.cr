@@ -3,6 +3,8 @@ require "csv"
 require "./ml"
 require "./trees"
 require "./array"
+require "./random"
+require "./math"
 
 def golf_features
   f0 = %w(r r o s s s o r r s r o o s)  # outlook
@@ -58,11 +60,11 @@ describe ML::Classifiers::DecisionTreeClassifier do
 end
 
 
-describe ML::Classifiers::DecisionTreeRegresor do
+describe ML::Classifiers::DecisionTreeRegressor do
   describe "with categorical data (hair eye color)" do
     it "with training data" do
       x, y = ML.load_string_csv("HairEyeColor.csv", columns_to_skip: 1)
-      clf = ML::Classifiers::DecisionTreeRegresor.new.fit(x, y)
+      clf = ML::Classifiers::DecisionTreeRegressor.new.fit(x, y)
       y_pred = clf.predict(x)
       y_pred.should eq([32, 53, 10, 3.5, 11, 50, 10, 30, 10, 25, 6.75, 6.75, 2.5, 14.5, 6.75, 6.75, 36, 66, 16, 3.5, 9, 34, 7, 64, 5, 29, 6.75, 6.75, 2.5, 14.5, 6.75, 6.75])
     end
@@ -75,10 +77,31 @@ describe ML::Classifiers::DecisionTreeRegresor do
     x_train, y_train = x[train_index], y[train_index]
     x_test, y_test = x[test_index], y[test_index]
 
-    clf = ML::Classifiers::DecisionTreeRegresor.new.fit(x_train, y_train)
+    clf = ML::Classifiers::DecisionTreeRegressor.new.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
 
     acc = ML.accuracy(y_test, y_pred)
     acc.is_a?(Float).should eq(true)
   end
+
+  it "using max depth in the trees" do
+    x = Random.sequence(80).map {|x| x * 5}
+    x.sort!
+    y = Math.sin(x)
+
+    seq = Random.sequence(16).map{|x| 3 * (0.5 - x)}
+    y.each_with_index do |e, i|
+      y[i] += seq[i/5] if i%5 == 0
+    end
+
+    regr = ML::Classifiers::DecisionTreeRegressor.new(max_depth: 2)
+
+    x = x.map {|xi| [xi]}
+
+    regr.fit(x, y)
+
+    regr.show_tree(column_names: ["x", "y"])
+    regr.depth.should eq(2)
+  end
+
 end

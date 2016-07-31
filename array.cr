@@ -4,7 +4,6 @@ class Array(T)
     get_shape(self)
   end
 
-
   def [](positions : Array(Int))
     res = [] of T
     positions.each do |idx|
