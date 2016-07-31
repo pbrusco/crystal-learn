@@ -1,3 +1,5 @@
+# Based on http://scikit-learn.org/stable/auto_examples/tree/plot_tree_regression.html
+
 require "random"
 require "../math"
 require "../random"

@@ -1,3 +1,5 @@
+# based on http://scikit-learn.org/stable/auto_examples/tree/plot_iris.html#example-tree-plot-iris-py
+
 require "csv"
 require "../ml"
 require "../trees"
