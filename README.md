@@ -29,6 +29,7 @@ clf.fit(x_train, y_train)
 y_pred = clf.predict(x_test)
 acc = ML.accuracy(y_test, y_pred)
 
+p ""
 p "Accuracy (DecisionTreeClassifier): #{acc}"```
 
 ```
@@ -49,5 +50,6 @@ Set sizes: x_train 120 y_train 120 x_test 30 y_test 30
 "Accuracy (KNN - 125 neighbors): 0.3"
 "Accuracy (KNN - 135 neighbors): 0.3"
 "Accuracy (KNN - 145 neighbors): 0.3"
-"Accuracy (DecisionTreeClassifier): 0.8"
+
+"Accuracy (DecisionTreeClassifier): 0.9"
 ```
