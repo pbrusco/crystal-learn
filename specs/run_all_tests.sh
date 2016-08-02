@@ -1,2 +1,1 @@
-crystal trees_spec.cr
-crystal ml_spec.cr
+find . -name '*_spec.cr' -exec crystal {} \;
