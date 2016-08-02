@@ -1,10 +1,10 @@
 # Based on http://scikit-learn.org/stable/auto_examples/tree/plot_tree_regression.html
 
 require "random"
-require "../math"
-require "../random"
-require "../array"
-require "../trees"
+require "../../lib/math"
+require "../../lib/random"
+require "../../lib/array"
+require "../../lib/trees"
 require "csv"
 
 x = Random.sequence(80).map {|x| x * 5}

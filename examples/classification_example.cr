@@ -1,8 +1,8 @@
 require "csv"
-require "./knn"
-require "./trees"
-require "./array"
-require "./ml"
+require "../lib/knn"
+require "../lib/trees"
+require "../lib/array"
+require "../lib/ml"
 
 puts "Loading IRIS dataset"
 
