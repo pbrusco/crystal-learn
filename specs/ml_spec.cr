@@ -1,7 +1,7 @@
 require "spec"
 require "csv"
-require "./ml"
-require "./trees"
+require "../lib/ml"
+require "../lib/trees"
 
 # examples comming from: http://www.saedsayad.com/decision_tree.htm
 describe ML do

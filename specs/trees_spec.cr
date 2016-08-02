@@ -1,10 +1,10 @@
 require "spec"
 require "csv"
-require "./ml"
-require "./trees"
-require "./array"
-require "./random"
-require "./math"
+require "../lib/ml"
+require "../lib/trees"
+require "../lib/array"
+require "../lib/random"
+require "../lib/math"
 
 def golf_features
   f0 = %w(r r o s s s o r r s r o o s)  # outlook
