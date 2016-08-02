@@ -1,5 +1,6 @@
 ## An sklearn-like machine-learning library for Crystal
 
+Example (that can be found in examples folder)
 ```crystal
 require "csv"
 require "./knn"
