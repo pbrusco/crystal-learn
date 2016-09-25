@@ -28,7 +28,7 @@ end
 puts "------------------ KNN -------------------"
 
 (5..150).step(10).each do |n|
-  clf = ML::Classifiers::KNeighborsClassifier(typeof(x.first), typeof(y.first)).new(n_neighbors: n)
+  clf = ML::Classifiers::KNeighborsClassifier(typeof(x.first.first), typeof(y.first)).new(n_neighbors: n)
   folds_acc = folds_accuracy(clf, x, y, n_folds: 10).round(2)
   puts "10-folds accuracy #{folds_acc} (KNN - #{n} neighbors)"
 end

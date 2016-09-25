@@ -1,9 +1,9 @@
 module ML
   module Classifiers
-    class KNeighborsClassifier(T1, T2)
+    class KNeighborsClassifier(XType, YType)
       def initialize(n_neighbors @k=5)
-        @neighbors = [] of T1
-        @tags = [] of T2
+        @neighbors = [] of Array(XType)
+        @tags = [] of YType
       end
 
       def dist(x, y)
@@ -17,7 +17,7 @@ module ML
 
       def predict(instances)
         instances.map { |x|
-          dist_to_x = ->(x : T1, y : T1){dist(x, y)}.partial(x)
+          dist_to_x = ->(x : Array(XType), y : Array(XType)){dist(x, y)}.partial(x)
 
           distances = @neighbors.map(&dist_to_x)
           top_n = distances.zip(@tags).sort.take(@k).map(&.last)
