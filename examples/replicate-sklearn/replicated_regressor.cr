@@ -16,10 +16,14 @@ y.each_with_index do |e, i|
   y[i] += seq[i/5] if i%5 == 0
 end
 
-regr2 = ML::Classifiers::DecisionTreeRegressor.new(max_depth: 2)
-regr5 = ML::Classifiers::DecisionTreeRegressor.new(max_depth: 5)
-
 x = x.map {|xi| [xi]}
+
+def regressor_for(x,y)
+  ML::Classifiers::DecisionTreeRegressor(typeof(x.first.first), typeof(y.first))
+end
+
+regr2 = regressor_for(x, y).new(max_depth: 2)
+regr5 = regressor_for(x, y).new(max_depth: 5)
 
 regr2.fit(x, y)
 regr5.fit(x, y)

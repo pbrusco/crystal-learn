@@ -17,14 +17,14 @@ pairs.each_with_index do |pair, pairidx|
   x = ML.standardize(x)
 
   # Train
-  clf = ML::Classifiers::DecisionTreeClassifier(Float32, String).new.fit(x, y)
+  clf = ML::Classifiers::DecisionTreeClassifier(typeof(x.first.first), typeof(y.first)).new.fit(x, y)
 
   f = File.open("csv_for_pair_#{pairidx}.csv", mode: "w")
 
   result = CSV.build(f) do |csv|
     ML.arange(-4.0, 4, step: 0.2) do |f2|
       ML.arange(-4.0, 4, step: 0.2) do |f1|
-        z = clf.predict([f1, f2])
+        z = clf.predict([f1.to_f32, f2.to_f32])
         csv.row f1, f2, z, "False"
       end
     end

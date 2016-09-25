@@ -36,7 +36,7 @@ end
 puts "------------------ TREES -------------------"
 
 (2..15).each do |max_depth|
-  clf = ML::Classifiers::DecisionTreeClassifier.new(max_depth: max_depth)
+  clf = ML::Classifiers::DecisionTreeClassifier(typeof(x.first.first), typeof(y.first)).new(max_depth: max_depth)
   folds_acc = folds_accuracy(clf, x, y, n_folds: 10).round(2)
   puts "10-folds accuracy #{folds_acc} (DecisionTreeClassifier - max_depth: #{max_depth})"
 end
