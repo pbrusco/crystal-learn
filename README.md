@@ -3,10 +3,10 @@
 Example (that can be found in examples folder)
 ```crystal
 require "csv"
-require "./knn"
-require "./trees"
-require "./array"
-require "./ml"
+require "../knn"
+require "../trees"
+require "../array"
+require "../ml"
 
 puts "Loading IRIS dataset"
 
@@ -32,7 +32,7 @@ end
 puts "------------------ KNN -------------------"
 
 (5..150).step(10).each do |n|
-  clf = ML::Classifiers::KNeighborsClassifier(typeof(x.first), typeof(y.first)).new(n_neighbors: n)
+  clf = ML::Classifiers::KNeighborsClassifier(typeof(x.first.first), typeof(y.first)).new(n_neighbors: n)
   folds_acc = folds_accuracy(clf, x, y, n_folds: 10).round(2)
   puts "10-folds accuracy #{folds_acc} (KNN - #{n} neighbors)"
 end
@@ -40,7 +40,7 @@ end
 puts "------------------ TREES -------------------"
 
 (2..15).each do |max_depth|
-  clf = ML::Classifiers::DecisionTreeClassifier.new(max_depth: max_depth)
+  clf = ML::Classifiers::DecisionTreeClassifier(typeof(x.first.first), typeof(y.first)).new(max_depth: max_depth)
   folds_acc = folds_accuracy(clf, x, y, n_folds: 10).round(2)
   puts "10-folds accuracy #{folds_acc} (DecisionTreeClassifier - max_depth: #{max_depth})"
 end
