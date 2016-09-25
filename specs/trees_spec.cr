@@ -7,10 +7,10 @@ require "../lib/random"
 require "../lib/math"
 
 def golf_features
-  f0 = %w(r r o s s s o r r s r o o s)  # outlook
-  f1 = %w(h h h m c c c m c m m m h m)  # temperature
-  f2 = %w(h h h h n n n h n n n h n h)  # humidity
-  f3 = %w(f t f f f t t f f f t t f t)  # windy
+  f0 = %i(r r o s s s o r r s r o o s)  # outlook
+  f1 = %i(h h h m c c c m c m m m h m)  # temperature
+  f2 = %i(h h h h n n n h n n n h n h)  # humidity
+  f3 = %i(f t f f f t t f f f t t f t)  # windy
   [f0, f1, f2, f3].transpose
 end
 
@@ -19,28 +19,28 @@ describe ML::Classifiers::DecisionTreeClassifier do
     it "should classify" do
       # http://www.saedsayad.com/decision_tree.htm
       x = golf_features
-      y =  %w(n n y y y n y n y y y y y n)  # play golf?
+      y =  %i(n n y y y n y n y y y y y n)  # play golf?
 
-      column_names = %w(outlook temperature hummidity windy play_golf)
+      column_names = %i(outlook temperature hummidity windy play_golf)
 
-      trained_tree = ML::Classifiers::DecisionTreeClassifier(String, String).new.fit(x, y)
+      trained_tree = ML::Classifiers::DecisionTreeClassifier(Symbol, Symbol).new.fit(x, y)
       # trained_tree.show_tree(column_names: column_names)
 
-      trained_tree.predict([%w(s h h t)]).should eq(["n"])
-      trained_tree.predict([%w(s h h t)]).should eq(["n"])
+      trained_tree.predict([%i(s h h t)]).should eq([:n])
+      trained_tree.predict([%i(s h h t)]).should eq([:n])
     end
 
     it "should classify unseen paths" do
       # http://www.saedsayad.com/decision_tree.htm
       x = golf_features
-      y =  %w(n n y y y n y n y y y y y n)  # play golf?
+      y =  %i(n n y y y n y n y y y y y n)  # play golf?
 
-      column_names = %w(outlook temperature hummidity windy play_golf)
+      column_names = %i(outlook temperature hummidity windy play_golf)
 
-      trained_tree = ML::Classifiers::DecisionTreeClassifier(String, String).new.fit(x, y)
+      trained_tree = ML::Classifiers::DecisionTreeClassifier(Symbol, Symbol).new.fit(x, y)
       # trained_tree.show_tree(column_names: column_names)
 
-      trained_tree.predict([%w(s s s s)]).should eq(["n"])
+      trained_tree.predict([%i(s s s s)]).should eq([:n])
     end
   end
 

@@ -73,11 +73,11 @@ module ML
         @tree.show(column_names, level: 0)
       end
 
-      def decide_child(split_val : Float, new_instance_feature_value : Float, tree)
+      def decide_child(split_val : Number, new_instance_feature_value : Number, tree)
         child = split_val > new_instance_feature_value ? tree.left_child : tree.right_child
       end
 
-      def decide_child(split_val : String, new_instance_feature_value : String, tree)
+      def decide_child(split_val : XType, new_instance_feature_value : XType, tree)
         child = split_val == new_instance_feature_value ? tree.left_child : tree.right_child
       end
 
