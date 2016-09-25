@@ -1,21 +1,21 @@
 # http://www.saedsayad.com/decision_tree.htm
 
-abstract class Tree
+abstract class Tree(XType, YType)
 end
 
-class Node < Tree
+class Node(XType, YType) < Tree(XType, YType)
   property :left_child
   property :right_child
   property :feature_index
   property :split_value
 
-  @left_child : Tree
-  @right_child : Tree
-  @split_value : String | Float32 | Float64 #TODO: Change for generic types when crystal is ready :)
+  @left_child : Tree(XType, YType)
+  @right_child : Tree(XType, YType)
+  @split_value : XType
 
   def initialize(@feature_index : Int32, @split_value)
-    @right_child = EmptyTree.new
-    @left_child = EmptyTree.new
+    @right_child = EmptyTree(XType, YType).new
+    @left_child = EmptyTree(XType, YType).new
   end
 
   def depth
@@ -38,10 +38,10 @@ class Node < Tree
   end
 end
 
-class Leaf < Tree
+class Leaf(XType, YType) < Tree(XType, YType)
   property :tags
 
-  def initialize(@tags : Array(String) | Array(Float32) | Array(Float64))  # TODO: Change for generic type when crystal is ready :)
+  def initialize(@tags : Array(YType) )  # TODO: Change for generic type when crystal is ready :)
   end
 
   def depth
@@ -55,7 +55,7 @@ class Leaf < Tree
   end
 end
 
-class EmptyTree < Tree
+class EmptyTree(XType, YType) < Tree(XType, YType)
   def show(column_names, level)
   end
 

@@ -3,28 +3,28 @@ require "./ml"
 
 module ML
   module Classifiers
-    abstract class DecisionTree
-      @tree : Tree
+    abstract class DecisionTree(XType, YType)
+      @tree : Tree(XType, YType)
 
-      def initialize(@tree = EmptyTree.new, *, @max_depth = 10)
+      def initialize(@tree = EmptyTree(XType, YType).new, *, @max_depth = 10)
       end
 
       def depth
         @tree.depth
       end
 
-      def fit(x : Array(Array(T1)), y : Array(T2))
+      def fit(x : Array(Array(XType)), y : Array(YType))
         @tree = build_tree(x, y, 1)
         self
       end
 
-      def predict(instances : Array(Array(Float)) | Array(Array(String)))
+      def predict(instances : Array(Array(XType)))
         instances.map do |new_instance|
           predict(new_instance)
         end
       end
 
-      def predict(instance : Array(Float) | Array(String))
+      def predict(instance : Array(XType))
         navigate_tree(@tree, instance)
       end
 
@@ -33,34 +33,34 @@ module ML
         metric_by_feature = (0 .. data.size-1).map {|feature_idx| {feature_idx, metric_function(tags, given: data[feature_idx])} }
         selected_feature, max_metric_value = metric_by_feature.max_by { |feature, metric_value| metric_value }
         if threshold_achieved(max_metric_value) || tree_depth > @max_depth
-          Leaf.new(tags: tags)
+          Leaf(XType, YType).new(tags: tags)
         else
           node = build_node(xs, data, selected_feature, tags, tree_depth)
         end
       end
 
-      def build_node(xs : Array(Array(String)), data, selected_feature, tags, tree_depth)
-        feature_values = data[selected_feature].uniq
-        split_feature_value = better_split(feature_values, xs)
-
-        node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
-
-        selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == split_feature_value}
-        node.left_child = build_tree(selected_rows, tags[indices], tree_depth + 1)
-
-        other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] != split_feature_value}
-        node.right_child = build_tree(other_rows, tags[other_indices], tree_depth + 1)
-        node
-      end
-
-      def build_node(xs : Array(Array(Float)), data, selected_feature, tags, tree_depth)
+      def build_node(xs : Array(Array(Number)), data, selected_feature, tags, tree_depth)
         split_feature_value = data[selected_feature].mean
-        node = Node.new(feature_index: selected_feature, split_value: split_feature_value)
+        node = Node(XType, YType).new(feature_index: selected_feature, split_value: split_feature_value)
 
         selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] <= split_feature_value}
         node.left_child = build_tree(selected_rows, tags[indices], tree_depth + 1)
 
         other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] > split_feature_value}
+        node.right_child = build_tree(other_rows, tags[other_indices], tree_depth + 1)
+        node
+      end
+
+      def build_node(xs : Array(Array(XType)), data, selected_feature, tags, tree_depth)
+        feature_values = data[selected_feature].uniq
+        split_feature_value = better_split(feature_values, xs)
+
+        node = Node(XType, YType).new(feature_index: selected_feature, split_value: split_feature_value)
+
+        selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == split_feature_value}
+        node.left_child = build_tree(selected_rows, tags[indices], tree_depth + 1)
+
+        other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] != split_feature_value}
         node.right_child = build_tree(other_rows, tags[other_indices], tree_depth + 1)
         node
       end
@@ -101,7 +101,7 @@ module ML
       end
     end
 
-    class DecisionTreeClassifier < DecisionTree
+    class DecisionTreeClassifier(XType, YType) < DecisionTree(XType, YType)
       def metric_function(tags, *, given x)
         ML.gain(tags, given: x)
       end
@@ -115,14 +115,14 @@ module ML
       end
     end
 
-    class DecisionTreeRegressor < DecisionTree
+    class DecisionTreeRegressor(XType, YType) < DecisionTree(XType, YType)
       @full_dataset_std : Float32 | Float64 | Nil
       # def initialize(@tree = EmptyTree.new, *, @max_depth = 10)
         # @full_dataset_std=0.0f32
         # super
       # end
 
-      def fit(x : Array(Array(T1)), y : Array(T2))
+      def fit(x : Array(Array(XType)), y : Array(Float))
         @full_dataset_std = y.std
         super
       end

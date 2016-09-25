@@ -23,8 +23,7 @@ describe ML::Classifiers::DecisionTreeClassifier do
 
       column_names = %w(outlook temperature hummidity windy play_golf)
 
-      trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
-      trained_tree.class.should eq(ML::Classifiers::DecisionTreeClassifier)
+      trained_tree = ML::Classifiers::DecisionTreeClassifier(String, String).new.fit(x, y)
       # trained_tree.show_tree(column_names: column_names)
 
       trained_tree.predict([%w(s h h t)]).should eq(["n"])
@@ -38,8 +37,7 @@ describe ML::Classifiers::DecisionTreeClassifier do
 
       column_names = %w(outlook temperature hummidity windy play_golf)
 
-      trained_tree = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
-      trained_tree.class.should eq(ML::Classifiers::DecisionTreeClassifier)
+      trained_tree = ML::Classifiers::DecisionTreeClassifier(String, String).new.fit(x, y)
       # trained_tree.show_tree(column_names: column_names)
 
       trained_tree.predict([%w(s s s s)]).should eq(["n"])
@@ -49,7 +47,7 @@ describe ML::Classifiers::DecisionTreeClassifier do
   describe "with numerical data (iris dataset)" do
     it "should classify" do
       x, y = ML.load_floats_csv("iris.csv")
-      clf = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
+      clf = ML::Classifiers::DecisionTreeClassifier(Float32, String).new.fit(x, y)
       y_pred = clf.predict(x)
 
       acc = ML.accuracy(y, y_pred)
@@ -64,7 +62,7 @@ describe ML::Classifiers::DecisionTreeRegressor do
   describe "with categorical data (hair eye color)" do
     it "with training data" do
       x, y = ML.load_string_csv("HairEyeColor.csv", columns_to_skip: 1)
-      clf = ML::Classifiers::DecisionTreeRegressor.new.fit(x, y)
+      clf = ML::Classifiers::DecisionTreeRegressor(String, Float32).new.fit(x, y)
       y_pred = clf.predict(x)
       y_pred.should eq([32, 53, 10, 3.5, 11, 50, 10, 30, 10, 25, 6.75, 6.75, 2.5, 14.5, 6.75, 6.75, 36, 66, 16, 3.5, 9, 34, 7, 64, 5, 29, 6.75, 6.75, 2.5, 14.5, 6.75, 6.75])
     end
@@ -77,7 +75,7 @@ describe ML::Classifiers::DecisionTreeRegressor do
     x_train, y_train = x[train_index], y[train_index]
     x_test, y_test = x[test_index], y[test_index]
 
-    clf = ML::Classifiers::DecisionTreeRegressor.new.fit(x_train, y_train)
+    clf = ML::Classifiers::DecisionTreeRegressor(String, Float32).new.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
 
     acc = ML.accuracy(y_test, y_pred)
@@ -94,7 +92,7 @@ describe ML::Classifiers::DecisionTreeRegressor do
       y[i] += seq[i/5] if i%5 == 0
     end
 
-    regr = ML::Classifiers::DecisionTreeRegressor.new(max_depth: 2)
+    regr = ML::Classifiers::DecisionTreeRegressor(Float64, Float64).new(max_depth: 2)
 
     x = x.map {|xi| [xi]}
 

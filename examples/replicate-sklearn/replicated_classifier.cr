@@ -17,7 +17,7 @@ pairs.each_with_index do |pair, pairidx|
   x = ML.standardize(x)
 
   # Train
-  clf = ML::Classifiers::DecisionTreeClassifier.new.fit(x, y)
+  clf = ML::Classifiers::DecisionTreeClassifier(Float32, String).new.fit(x, y)
 
   f = File.open("csv_for_pair_#{pairidx}.csv", mode: "w")
 
