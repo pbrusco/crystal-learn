@@ -53,7 +53,7 @@ module ML
 
       def build_node(xs : Array(Array(XType)), data, selected_feature, tags, tree_depth)
         feature_values = data[selected_feature].uniq
-        split_feature_value = better_split(feature_values, xs)
+        split_feature_value = select_best_feature_to_split(feature_values, xs)
 
         node = Node(XType, YType).new(feature_index: selected_feature, split_value: split_feature_value)
 
@@ -65,8 +65,8 @@ module ML
         node
       end
 
-      def better_split(features, xs)
-        features[0] # TODO: select better partition
+      def select_best_feature_to_split(features, xs)
+        features[0] # TODO: select better partition (implement information GAIN)
       end
 
       def show_tree(column_names)
@@ -117,10 +117,6 @@ module ML
 
     class DecisionTreeRegressor(XType, YType) < DecisionTree(XType, YType)
       @full_dataset_std : Float32 | Float64 | Nil
-      # def initialize(@tree = EmptyTree.new, *, @max_depth = 10)
-        # @full_dataset_std=0.0f32
-        # super
-      # end
 
       def fit(x : Array(Array(XType)), y : Array(Float))
         @full_dataset_std = y.std
