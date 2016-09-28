@@ -81,10 +81,6 @@ module ML
         child = split_val == new_instance_feature_value ? tree.left_child : tree.right_child
       end
 
-      def decide_child(a, b, c)
-        raise "Type error"
-      end
-
       def navigate_tree(tree, new_instance)
         case tree
         when Leaf
