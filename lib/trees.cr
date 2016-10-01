@@ -53,7 +53,7 @@ module ML
 
       def build_node(xs : Array(Array(XType)), data, selected_feature, tags, tree_depth)
         feature_values = data[selected_feature].uniq
-        split_feature_value = select_best_feature_to_split(feature_values, xs)
+        split_feature_value = select_best_feature_value_to_split(feature_values, xs)
 
         node = Node(XType, YType).new(feature_index: selected_feature, split_value: split_feature_value)
 
@@ -65,8 +65,8 @@ module ML
         node
       end
 
-      def select_best_feature_to_split(features, xs)
-        features[0] # TODO: select better partition (implement information GAIN)
+      def select_best_feature_value_to_split(features, xs)
+        features[0] # TODO: select better partition
       end
 
       def show_tree(column_names)

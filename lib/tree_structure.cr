@@ -41,7 +41,7 @@ end
 class Leaf(XType, YType) < Tree(XType, YType)
   property :tags
 
-  def initialize(@tags : Array(YType) )  # TODO: Change for generic type when crystal is ready :)
+  def initialize(@tags : Array(YType) )  
   end
 
   def depth
