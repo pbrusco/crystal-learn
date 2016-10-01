@@ -2,7 +2,7 @@ require "./array"
 
 module ML
   def ML.train_test_split(size, *, train_size)
-    idx = (0..size-1).to_a.shuffle
+    idx = (0..size - 1).to_a.shuffle
     {idx.take(train_size), idx.drop(train_size)}
   end
 
@@ -13,7 +13,7 @@ module ML
 
   def ML.kfold_cross_validation(*, dataset_size, n_folds k = 10, shuffle = true)
     res = [] of Tuple(Array(Int32), Array(Int32))
-    idx = (0..dataset_size-1).to_a
+    idx = (0..dataset_size - 1).to_a
     idx.shuffle! if shuffle
 
     training_percentage = 1 - (1.0 / k)
@@ -28,7 +28,7 @@ module ML
   end
 
   def ML.accuracy(actual, predicted)
-    right = actual.zip(predicted).map {|(x,y)| x == y ? 1 : 0}.sum
+    right = actual.zip(predicted).map { |(x, y)| x == y ? 1 : 0 }.sum
     right.to_f / actual.size
   end
 
@@ -60,7 +60,7 @@ module ML
 
   def ML.arange(start, endd, *, step, &block)
     i = start
-    while(i < endd)
+    while (i < endd)
       yield i.round(2)
       i += step
     end
@@ -76,12 +76,12 @@ module ML
 
   def ML.entropy(y)
     y_frequencies = y.frequencies
-    y_frequencies.map {|tag, freq| -freq * Math.log(freq, 2)}.sum
+    y_frequencies.map { |tag, freq| -freq * Math.log(freq, 2) }.sum
   end
 
   def ML.entropy(y, given x)
-    categories_frequencies =  x.frequencies
-    categories_frequencies.map {|category, freq| freq * ML.entropy(y[x.indices_of(category)])}.sum
+    categories_frequencies = x.frequencies
+    categories_frequencies.map { |category, freq| freq * ML.entropy(y[x.indices_of(category)]) }.sum
   end
 
   def ML.gain(y, given x)
@@ -89,8 +89,8 @@ module ML
   end
 
   def ML.std(y, given x)
-    categories_frequencies =  x.frequencies
-    categories_frequencies.map {|category, freq| freq * y[x.indices_of(category)].std}.sum
+    categories_frequencies = x.frequencies
+    categories_frequencies.map { |category, freq| freq * y[x.indices_of(category)].std }.sum
   end
 
   def ML.std_reduction(y, given x)
@@ -102,5 +102,4 @@ module ML
     std = x.std(by: :column)
     x.substract(mean, by: :column).divide(std, by: :column)
   end
-
 end

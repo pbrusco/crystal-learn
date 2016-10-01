@@ -7,18 +7,18 @@ require "../../lib/array"
 require "../../lib/trees"
 require "csv"
 
-x = Random.sequence(80).map {|x| x * 5}
+x = Random.sequence(80).map { |x| x * 5 }
 x.sort!
 y = Math.sin(x)
 
-seq = Random.sequence(16).map{|x| 3 * (0.5 - x)}
+seq = Random.sequence(16).map { |x| 3 * (0.5 - x) }
 y.each_with_index do |e, i|
-  y[i] += seq[i/5] if i%5 == 0
+  y[i] += seq[i/5] if i % 5 == 0
 end
 
-x = x.map {|xi| [xi]}
+x = x.map { |xi| [xi] }
 
-def regressor_for(x,y)
+def regressor_for(x, y)
   ML::Classifiers::DecisionTreeRegressor(typeof(x.first.first), typeof(y.first))
 end
 
@@ -29,16 +29,15 @@ regr2.fit(x, y)
 regr5.fit(x, y)
 
 # Predict
-x_test = ML.arange(0.0, 5.0, step: 0.01).map {|x| [x]}
-y_pred2 = regr2.predict(x_test).map {|x| x.round(2)}
-y_pred5 = regr5.predict(x_test).map {|x| x.round(2)}
+x_test = ML.arange(0.0, 5.0, step: 0.01).map { |x| [x] }
+y_pred2 = regr2.predict(x_test).map { |x| x.round(2) }
+y_pred5 = regr5.predict(x_test).map { |x| x.round(2) }
 
 puts "regresor max_depth: 2"
 regr2.show_tree(column_names: ["x", "y"])
 
 # puts "regresor max_depth: 5"
 # regr5.show_tree(column_names: ["x", "y"])
-
 
 f = File.open("regressor.csv", mode: "w")
 
@@ -54,4 +53,4 @@ result = CSV.build(f) do |csv|
   end
 end
 
-f.close()
+f.close

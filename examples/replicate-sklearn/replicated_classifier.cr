@@ -33,7 +33,5 @@ pairs.each_with_index do |pair, pairidx|
     end
   end
 
-  f.close()
-
-
+  f.close
 end

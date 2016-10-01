@@ -40,6 +40,6 @@ puts "------------------ TREES -------------------"
   folds_acc = folds_accuracy(clf, x, y, n_folds: 10).round(2)
   puts "10-folds accuracy #{folds_acc} (DecisionTreeClassifier - max_depth: #{max_depth})"
 end
-  # uncomment to vizualize the tree:
-  # clf.show_tree(%w(sepal_length sepal_width petal_length petal_width species))
+# uncomment to vizualize the tree:
+# clf.show_tree(%w(sepal_length sepal_width petal_length petal_width species))
 puts

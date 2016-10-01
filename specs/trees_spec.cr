@@ -7,10 +7,10 @@ require "../lib/random"
 require "../lib/math"
 
 def golf_features
-  f0 = %i(r r o s s s o r r s r o o s)  # outlook
-  f1 = %i(h h h m c c c m c m m m h m)  # temperature
-  f2 = %i(h h h h n n n h n n n h n h)  # humidity
-  f3 = %i(f t f f f t t f f f t t f t)  # windy
+  f0 = %i(r r o s s s o r r s r o o s) # outlook
+  f1 = %i(h h h m c c c m c m m m h m) # temperature
+  f2 = %i(h h h h n n n h n n n h n h) # humidity
+  f3 = %i(f t f f f t t f f f t t f t) # windy
   [f0, f1, f2, f3].transpose
 end
 
@@ -19,7 +19,7 @@ describe ML::Classifiers::DecisionTreeClassifier do
     it "should classify" do
       # http://www.saedsayad.com/decision_tree.htm
       x = golf_features
-      y =  %i(n n y y y n y n y y y y y n)  # play golf?
+      y = %i(n n y y y n y n y y y y y n) # play golf?
 
       column_names = %i(outlook temperature hummidity windy play_golf)
 
@@ -33,7 +33,7 @@ describe ML::Classifiers::DecisionTreeClassifier do
     it "should classify unseen paths" do
       # http://www.saedsayad.com/decision_tree.htm
       x = golf_features
-      y =  %i(n n y y y n y n y y y y y n)  # play golf?
+      y = %i(n n y y y n y n y y y y y n) # play golf?
 
       column_names = %i(outlook temperature hummidity windy play_golf)
 
@@ -54,9 +54,7 @@ describe ML::Classifiers::DecisionTreeClassifier do
       acc.is_a?(Float).should eq(true)
     end
   end
-
 end
-
 
 describe ML::Classifiers::DecisionTreeRegressor do
   describe "with categorical data (hair eye color)" do
@@ -83,22 +81,21 @@ describe ML::Classifiers::DecisionTreeRegressor do
   end
 
   it "using max depth in the trees" do
-    x = Random.sequence(80).map {|x| x * 5}
+    x = Random.sequence(80).map { |x| x * 5 }
     x.sort!
     y = Math.sin(x)
 
-    seq = Random.sequence(16).map{|x| 3 * (0.5 - x)}
+    seq = Random.sequence(16).map { |x| 3 * (0.5 - x) }
     y.each_with_index do |e, i|
-      y[i] += seq[i/5] if i%5 == 0
+      y[i] += seq[i/5] if i % 5 == 0
     end
 
     regr = ML::Classifiers::DecisionTreeRegressor(Float64, Float64).new(max_depth: 2)
 
-    x = x.map {|xi| [xi]}
+    x = x.map { |xi| [xi] }
 
     regr.fit(x, y)
 
     regr.depth.should eq(2)
   end
-
 end

@@ -30,7 +30,7 @@ module ML
 
       def build_tree(xs, tags, tree_depth)
         data = xs.transpose
-        metric_by_feature = (0 .. data.size-1).map {|feature_idx| {feature_idx, metric_function(tags, given: data[feature_idx])} }
+        metric_by_feature = (0..data.size - 1).map { |feature_idx| {feature_idx, metric_function(tags, given: data[feature_idx])} }
         selected_feature, max_metric_value = metric_by_feature.max_by { |feature, metric_value| metric_value }
         if threshold_achieved(max_metric_value) || tree_depth > @max_depth
           Leaf(XType, YType).new(tags: tags)
@@ -43,10 +43,10 @@ module ML
         split_feature_value = data[selected_feature].mean
         node = Node(XType, YType).new(feature_index: selected_feature, split_value: split_feature_value)
 
-        selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] <= split_feature_value}
+        selected_rows, indices = xs.select_with_indices { |row| row[selected_feature] <= split_feature_value }
         node.left_child = build_tree(selected_rows, tags[indices], tree_depth + 1)
 
-        other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] > split_feature_value}
+        other_rows, other_indices = xs.select_with_indices { |row| row[selected_feature] > split_feature_value }
         node.right_child = build_tree(other_rows, tags[other_indices], tree_depth + 1)
         node
       end
@@ -57,10 +57,10 @@ module ML
 
         node = Node(XType, YType).new(feature_index: selected_feature, split_value: split_feature_value)
 
-        selected_rows, indices = xs.select_with_indices {|row| row[selected_feature] == split_feature_value}
+        selected_rows, indices = xs.select_with_indices { |row| row[selected_feature] == split_feature_value }
         node.left_child = build_tree(selected_rows, tags[indices], tree_depth + 1)
 
-        other_rows, other_indices = xs.select_with_indices {|row| row[selected_feature] != split_feature_value}
+        other_rows, other_indices = xs.select_with_indices { |row| row[selected_feature] != split_feature_value }
         node.right_child = build_tree(other_rows, tags[other_indices], tree_depth + 1)
         node
       end
@@ -103,7 +103,7 @@ module ML
       end
 
       def threshold_achieved(gain)
-         gain == 0
+        gain == 0
       end
 
       def select_final_value(values)

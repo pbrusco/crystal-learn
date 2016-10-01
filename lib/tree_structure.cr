@@ -33,7 +33,7 @@ class Node(XType, YType) < Tree(XType, YType)
     puts tabs + "Node(feature=#{feature_name})"
     children.each do |c|
       puts tabs + "split_by: #{@split_value}"
-      c.show(column_names, level+1)
+      c.show(column_names, level + 1)
     end
   end
 end
@@ -41,7 +41,7 @@ end
 class Leaf(XType, YType) < Tree(XType, YType)
   property :tags
 
-  def initialize(@tags : Array(YType) )  
+  def initialize(@tags : Array(YType))
   end
 
   def depth
