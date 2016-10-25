@@ -1,0 +1,10 @@
+name: learn
+version: 0.1.0
+
+authors:
+  - name <pablo.brusco@gmail.com>
+
+description: |
+  sklearn-like machine learning library
+
+license: MIT
