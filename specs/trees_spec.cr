@@ -52,6 +52,21 @@ describe ML::Classifiers::DecisionTreeClassifier do
 
       acc = ML.accuracy(y, y_pred)
       acc.is_a?(Float).should eq(true)
+      acc.should eq(1.00)
+
+    end
+  end
+
+  describe "with numerical data using max depth (iris dataset)" do
+    it "should classify" do
+      x, y = ML.load_floats_csv("iris.csv")
+      clf = ML::Classifiers::DecisionTreeClassifier(Float32, String).new(max_depth: 5).fit(x, y)
+      y_pred = clf.predict(x)
+
+      acc = ML.accuracy(y, y_pred)
+      acc.is_a?(Float).should eq(true)
+      acc.round(2).should eq(0.97)
+
     end
   end
 end

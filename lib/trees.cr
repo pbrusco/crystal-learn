@@ -1,9 +1,10 @@
 require "./tree_structure"
 require "./ml"
+require "./classifier"
 
 module ML
   module Classifiers
-    abstract class DecisionTree(XType, YType)
+    abstract class DecisionTree(XType, YType) < Classifier(XType, YType)
       @tree : Tree(XType, YType)
 
       def initialize(@tree = EmptyTree(XType, YType).new, *, @max_depth = 10)
