@@ -53,7 +53,6 @@ describe ML::Classifiers::DecisionTreeClassifier do
       acc = ML.accuracy(y, y_pred)
       acc.is_a?(Float).should eq(true)
       acc.should eq(1.00)
-
     end
   end
 
@@ -66,7 +65,6 @@ describe ML::Classifiers::DecisionTreeClassifier do
       acc = ML.accuracy(y, y_pred)
       acc.is_a?(Float).should eq(true)
       acc.round(2).should eq(0.97)
-
     end
   end
 end

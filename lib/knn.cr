@@ -19,10 +19,6 @@ module ML
         Math.sqrt(x.zip(y).map { |(x, y)| (x - y).abs2 }.sum)
       end
 
-      def predict(instances : Array(Array(XType)))
-        instances.map { |instance| predict(instance) }
-      end
-
       def predict(instance : Array(XType))
         dist_to_x = ->(x : Array(XType), y : Array(XType)) { dist(x, y) }.partial(instance)
 

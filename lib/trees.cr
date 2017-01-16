@@ -19,12 +19,6 @@ module ML
         self
       end
 
-      def predict(instances : Array(Array(XType)))
-        instances.map do |new_instance|
-          predict(new_instance)
-        end
-      end
-
       def predict(instance : Array(XType))
         navigate_tree(@tree, instance)
       end
