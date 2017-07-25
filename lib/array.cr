@@ -127,11 +127,11 @@ class Array(T)
   end
 end
 
-def get_shape(arr : Array(Array(T)))
+def get_shape(arr : Array(Array(T))) forall T
   {arr.size, arr[0].size}
 end
 
-def get_shape(arr : Array(T))
+def get_shape(arr : Array(T)) forall T
   arr.size
 end
 
